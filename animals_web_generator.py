@@ -7,20 +7,28 @@ def load_data(filename):
 # 1. JSON laden
 animals = load_data("animals_data.json")
 
-# 2. String mit allen Tierinfos erzeugen
+# 2. HTML-String erzeugen
 output = ""
 
 for animal in animals:
-    if "name" in animal:
-        output += f"Name: {animal['name']}\n"
-    if "diet" in animal:
-        output += f"Diet: {animal['diet']}\n"
-    if "locations" in animal and len(animal["locations"]) > 0:
-        output += f"Location: {animal['locations'][0]}\n"
-    if "type" in animal:
-        output += f"Type: {animal['type']}\n"
+    name = animal.get("name")
+    diet = animal.get("diet")
+    locations = animal.get("locations", [])
+    location = locations[0] if locations else None
+    type_ = animal.get("type")
 
-    output += "\n"
+    output += '<li class="cards__item">\n'
+
+    if name:
+        output += f"Name: {name}<br/>\n"
+    if diet:
+        output += f"Diet: {diet}<br/>\n"
+    if location:
+        output += f"Location: {location}<br/>\n"
+    if type_:
+        output += f"Type: {type_}<br/>\n"
+
+    output += '</li>\n\n'
 
 # 3. Template laden
 with open("animals_template.html", "r") as file:
@@ -33,4 +41,4 @@ html_output = template.replace("__REPLACE_ANIMALS_INFO__", output)
 with open("animals.html", "w") as file:
     file.write(html_output)
 
-print("animals.html wurde erzeugt.")
+print("animals.html wurde aktualisiert.")
